@@ -1,8 +1,11 @@
 pipeline {
-  tools {
+          tools {
 		maven "Maven"
 		jdk "JDK17"
-	}
+        }
+        triggers {
+                cron('H/10 * * * 1')
+        }
 	
 	stages {
 		stage('Checkout') {
@@ -16,17 +19,17 @@ pipeline {
 				sh 'mvn clean verify'
 			}
 		}
-    stage('Generate Report') {
-      steps {
-        sh 'mvn test jacoco:report'
-      }
-    }
-    stage('Archive jacoco report') {
-      steps {
-        jacoco execPattern: '**/target/jacoco.exec'
-      }
-    }
-	}
+            stage('Generate Report') {
+              steps {
+                sh 'mvn test jacoco:report'
+              }
+            }
+            stage('Archive jacoco report') {
+              steps {
+                jacoco execPattern: '**/target/jacoco.exec'
+              }
+            }
+        }
 	
 	post {
 		success {
